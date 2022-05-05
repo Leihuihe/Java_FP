@@ -1,6 +1,7 @@
 package com.fp.obj;
 
 import java.awt.Graphics;
+import javafx.scene.Scene;
 import java.awt.Image;
 import java.awt.Rectangle;
 

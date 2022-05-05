@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 
 import com.fp.GameWin;
+import com.fp.utils.GameUtils;
 
 public class ShellObj extends GameObj{
 
@@ -40,6 +41,12 @@ public class ShellObj extends GameObj{
 		// TODO Auto-generated method stub
 		super.paintSelf(gImage);
 		y -= speed;
+		if(y<0)
+		{
+			this.x = -123;
+			this.y = 123;
+			GameUtils.removeList.add(this);
+		}
 	}
 	
 	

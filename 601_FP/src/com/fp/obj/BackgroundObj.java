@@ -26,7 +26,7 @@ public class BackgroundObj extends GameObj{
 	{
 		super.paintSelf(gImage);
 		y += speed;
-		if(y >= 0) y = -2000;
+		if(y >= 0) y = -4000;
 	}
 	
 	

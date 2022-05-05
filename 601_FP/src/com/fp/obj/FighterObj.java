@@ -1,5 +1,6 @@
 package com.fp.obj;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -9,6 +10,28 @@ import java.awt.event.MouseEvent;
 import com.fp.GameWin;
 
 public class FighterObj extends GameObj{
+	
+	int health_point = 3;
+	
+	public boolean zero_health_point()
+	{
+		return health_point == 0;
+	}
+	
+	public void reduce_health_point()
+	{
+		health_point--;
+	}
+	
+	public void set_health_point(int point)
+	{
+		this.health_point = point;
+	}
+	
+	public int get_health_point()
+	{
+		return this.health_point;
+	}
 
 	@Override
 	public Image getImg() {
@@ -50,6 +73,11 @@ public class FighterObj extends GameObj{
 	public void paintSelf(Graphics gImage) {
 		// TODO Auto-generated method stub
 		super.paintSelf(gImage);
+		gImage.setColor(Color.white);
+		gImage.fillRect(this.getX(), this.getY()+this.getHeight()+20, this.getWidth()+5, 5);
+		gImage.setColor(Color.red);
+		gImage.fillRect(this.getX(), this.getY()+this.getHeight()+20, this.health_point*(this.getWidth()+5)/3, 5);
+		
 	}
 	
 	
