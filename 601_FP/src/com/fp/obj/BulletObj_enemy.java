@@ -42,6 +42,9 @@ public class BulletObj_enemy extends GameObj{
 		if(this.getRec().intersects(this.frame.fighterObj.getRec()))
 		{
 			this.frame.fighterObj.reduce_health_point();
+			this.x = -880;
+			this.y = 999;
+			GameUtils.removeList.add(this);
 			if(this.frame.fighterObj.zero_health_point())
 			{
 				GameWin.state = 3;

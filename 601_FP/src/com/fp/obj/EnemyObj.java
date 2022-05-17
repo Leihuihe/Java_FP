@@ -31,6 +31,9 @@ public class EnemyObj extends GameObj{
 		if(this.getRec().intersects(this.frame.fighterObj.getRec()))
 		{
 			this.frame.fighterObj.reduce_health_point();
+			this.x = -2000;
+			this.y = 2000;
+			GameUtils.removeList.add(this);
 			if(this.frame.fighterObj.zero_health_point())
 			{
 				GameWin.state = 3;

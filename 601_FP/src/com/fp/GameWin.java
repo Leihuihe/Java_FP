@@ -16,6 +16,8 @@ import com.fp.obj.BossObj;
 import com.fp.obj.BulletObj_enemy;
 import com.fp.obj.EnemyObj;
 import com.fp.obj.FighterObj;
+import com.fp.obj.GameObj;
+import com.fp.obj.GiftObj;
 import com.fp.obj.ShellObj;
 import com.fp.utils.GameUtils;
 
@@ -24,7 +26,7 @@ public class GameWin extends JFrame{
 	//Game state 0:not begin 1:beginning 2:pause 3:fail 
 	public static int state = 0;
 	public static int score = 0;
-	public static int shootspeed = 6;
+	public static int shootspeed = 10;
 	public static int enemy_speed =10;
 	public static int boss_shootspeed = 15;
 	public static int enemy_shootspeed = 20;
@@ -116,6 +118,7 @@ public class GameWin extends JFrame{
 		gImage.fillRect(0, 0, width, height);
 		if (state == 0)
 		{
+			score = 0;
 			gImage.drawImage(GameUtils.bgImg2,0,-1000,null);
 			gImage.drawImage(GameUtils.bossImg3,270,100,null);
 			//gImage.drawImage(GameUtils.explodeImg,200,500,null);
@@ -139,9 +142,23 @@ public class GameWin extends JFrame{
 			gImage.drawImage(GameUtils.explodeImg,fighterObj.getX()-35,fighterObj.getY()-50,null);		
 			gImage.setColor(Color.RED);
 			gImage.setFont(new Font("Calibri",Font.BOLD,40));
-			gImage.drawString("GAME OVER", 300, 770);
-			gImage.drawString("CLICK TO RESTART", 270, 800);
-			this.score = 0;
+			gImage.drawString("GAME OVER", 300, 500);
+			gImage.drawString("CLICK TO RESTART", 260, 800);
+			for(GameObj gameobj : GameUtils.gameObjList)
+			{
+				if(gameobj instanceof BossObj || gameobj instanceof EnemyObj || gameobj instanceof BulletObj_enemy || gameobj instanceof ShellObj)
+				{
+					GameUtils.removeList.add(gameobj);
+				}
+			}
+			GameUtils.BossObjList.clear();
+			GameUtils.enemyObjList.clear();
+			GameUtils.enemyObjList2.clear();
+			GameUtils.enemyObjList3.clear();
+			GameUtils.BulletObj_enemyList.clear();
+			GameUtils.giftObjList.clear();
+			GameUtils.shellObjList.clear();
+			
 			fighterObj.set_health_point(3);
 			
 		}
@@ -156,6 +173,78 @@ public class GameWin extends JFrame{
 	
 	public void createObj()
 	{
+
+		
+		if((score+1) % 10 == 0 && GameUtils.giftObjList.size() < 1)
+		{
+			if(Math.random()>0.4)
+			{
+				GiftObj gift = new GiftObj(GameUtils.giftImg2,(int)(Math.random()*17)*40,0,90,120,3,this);
+				gift.setGift_category(2);
+				GameUtils.giftObjList.add(gift);
+			}
+			else if(Math.random()<0.4 && Math.random()>0.3)
+			{
+				GiftObj gift = new GiftObj(GameUtils.giftImg1,(int)(Math.random()*17)*40,0,90,120,6,this);
+				gift.setGift_category(1);
+				GameUtils.giftObjList.add(gift);
+			}
+			else
+			{
+				GiftObj gift = new GiftObj(GameUtils.giftImg3,(int)(Math.random()*17)*40,0,90,120,10,this);
+				gift.setGift_category(3);
+				GameUtils.giftObjList.add(gift);
+			}
+			GameUtils.gameObjList.add(GameUtils.giftObjList.get(GameUtils.giftObjList.size() - 1));
+		}
+		
+		if(GameUtils.giftObjList.isEmpty()==false && GameUtils.giftObjList.get(GameUtils.giftObjList.size() - 1).isStatus() == true)
+		{
+			
+			switch (GameUtils.giftObjList.get(GameUtils.giftObjList.size() - 1).getGift_category())
+			{
+				case 1:
+					GameUtils.shellImg = GameUtils.doublefire;	
+					GameUtils.giftObjList.clear();
+					break;
+					
+				case 2:
+					if((shootspeed - 3)>0)
+						shootspeed -= 3;
+					else
+						shootspeed = 1;
+					GameUtils.giftObjList.clear();
+					
+					break;
+					
+				case 3:
+					for(GameObj gameobj : GameUtils.gameObjList)
+					{
+						if(gameobj instanceof BossObj || gameobj instanceof EnemyObj)
+						{
+							GameUtils.removeList.add(gameobj);
+							score++;
+						}
+					}
+					GameUtils.BossObjList.clear();
+					GameUtils.enemyObjList.clear();
+					GameUtils.enemyObjList2.clear();
+					GameUtils.enemyObjList3.clear();
+					GameUtils.giftObjList.clear();
+					break;
+					
+			}
+			
+					
+		}
+		if((System.currentTimeMillis() - GameUtils.starttime)> 10000)
+		{
+			GameUtils.shellImg = GameUtils.singlefire;
+			if(shootspeed == 1)
+				shootspeed = 5;
+			
+		}
+		
 		if(counts%shootspeed == 0)
 		{
 			GameUtils.shellObjList.add(new ShellObj(GameUtils.shellImg, fighterObj.getX()+3, fighterObj.getY()-16,14,29,7, this));
